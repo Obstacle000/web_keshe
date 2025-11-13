@@ -1,0 +1,89 @@
+<template>
+  <div>
+    <div class="na-layout">
+      <el-container>
+        <el-aside :width="sideBarWidth + 'px'" class="side-bar">
+          <side-bar></side-bar> <!-- 左侧菜单栏 -->
+        </el-aside>
+        <el-container>
+          <el-main :class="store.state.isCollapse?'main-margin-collapse':'main-margin'">
+            <div class="na-main-top" :style="topBarWidth">
+              <tabs-bar></tabs-bar> <!-- 顶部页签栏 -->
+              <nav-bar></nav-bar> <!--顶部导航栏-->
+            </div>
+            <app-main class="na-main-content"></app-main> <!--主体-->
+          </el-main>
+        </el-container>
+      </el-container>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import {useStore} from "vuex";
+import {computed, ref, watch} from "vue";
+
+const store = useStore()
+let isCollapse = ref(store.state.isCollapse)
+const sideBarWidth = ref(store.state.sideBarWidth)
+
+watch(() => store.state.isCollapse, (newVal) => {
+  if (newVal) {
+    isCollapse.value = store.state.isCollapse
+  }
+})
+
+const topBarWidth = computed(() => {
+  const width = store.state.sideBarWidth || 0
+  return "width: calc(100% - " + width + "px)"
+})
+</script>
+<script>
+import SideBar from '@/layouts/SideBar/Index'
+import NavBar from '@/layouts/NavBar/Index'
+import TabsBar from '@/layouts/TabsBar/Index'
+import AppMain from '@/layouts/AppMain/Index'
+
+export default {
+  name: "Layout",
+  components: {
+    'side-bar': SideBar,
+    'nav-bar': NavBar,
+    'tabs-bar': TabsBar,
+    'app-main': AppMain
+  }
+}
+</script>
+
+<style scoped>
+.na-layout {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--el-bg-color-page);
+}
+
+.main-margin {
+  margin-left: 0;
+  transition: width 1s;
+}
+
+.main-margin-collapse {
+  margin-left: -136px;
+  transition: width 0.3s;
+}
+
+.na-main-top {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9;
+  background-color: var(--el-card-bg-color);
+}
+
+.na-main-content {
+  margin-top: 135px;
+  background-color: var(--el-bg-color-page);
+}
+</style>

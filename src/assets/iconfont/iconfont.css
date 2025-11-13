@@ -1,0 +1,103 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3922397 */
+  src: url('iconfont.woff2?t=1677727294436') format('woff2'),
+       url('iconfont.woff?t=1677727294436') format('woff'),
+       url('iconfont.ttf?t=1677727294436') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-preview:before {
+  content: "\e76d";
+}
+
+.icon-baocuo:before {
+  content: "\e7b7";
+}
+
+.icon-cuowu:before {
+  content: "\e601";
+}
+
+.icon-sousuo:before {
+  content: "\e632";
+}
+
+.icon-remove-role:before {
+  content: "\e60b";
+}
+
+.icon-jurassic_delete-users:before {
+  content: "\e6f1";
+}
+
+.icon-jurassic_delete-user:before {
+  content: "\e6f2";
+}
+
+.icon-shanchu:before {
+  content: "\e8b6";
+}
+
+.icon-zhuti_tiaosepan:before {
+  content: "\e6d7";
+}
+
+.icon-reduce:before {
+  content: "\e77b";
+}
+
+.icon-plus:before {
+  content: "\e781";
+}
+
+.icon-right:before {
+  content: "\e785";
+}
+
+.icon-up:before {
+  content: "\e788";
+}
+
+.icon-left:before {
+  content: "\e789";
+}
+
+.icon-refresh:before {
+  content: "\e78b";
+}
+
+.icon-down:before {
+  content: "\e772";
+}
+
+.icon-close-sidebar:before {
+  content: "\e622";
+}
+
+.icon-open-sidebar:before {
+  content: "\e624";
+}
+
+.icon-teacher:before {
+  content: "\e722";
+}
+
+.icon-admin:before {
+  content: "\e600";
+}
+
+.icon-home:before {
+  content: "\e639";
+}
+
+.icon-student:before {
+  content: "\e627";
+}
+
