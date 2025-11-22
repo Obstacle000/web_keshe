@@ -14,7 +14,7 @@
         @select="selectPath"
     >
       <div class="logo-title">
-        <span>图</span>
+        <span></span>
         <span v-show="!isCollapse">学生管理系统</span>
       </div>
 
