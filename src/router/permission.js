@@ -6,6 +6,8 @@ export function filterAsyncRouter(routers, userRoles = []) {
 
     // 角色权限过滤
     const routeRoles = router.meta?.roles || []
+    // console.log('routeRoles:', routeRoles)
+    // console.log('userRoles:', userRoles)
 
     if (routeRoles.length && !userRoles.some(r => routeRoles.includes(r))) return false
 

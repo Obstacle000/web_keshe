@@ -3,11 +3,11 @@ import axios from 'axios'
 switch (process.env.NODE_ENV) {
   // 生产环境，部署到服务器上的环境
   case 'PROD':
-    axios.defaults.baseURL = 'http://192.168.58.77:8088';
+    axios.defaults.baseURL = 'http://192.168.58.77:22223';
     break;
   //开发环境接口地址
   default:
-    axios.defaults.baseURL = 'http://localhost:8088'
+    axios.defaults.baseURL = 'http://localhost:22223'
 }
 
 axios.interceptors.request.use(config => {

@@ -28,7 +28,6 @@
               <span v-else>-</span>
             </div>
             <div v-else style="text-align: center;">
-              <el-button link type="primary" @click="onDel(scope.row)">删除</el-button>
               <el-button link type="primary" @click="onEdit(scope.row)">编辑</el-button>
             </div>
           </template>

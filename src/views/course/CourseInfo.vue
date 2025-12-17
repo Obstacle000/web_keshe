@@ -2,13 +2,13 @@
   <div v-loading="loading">
     <!-- 搜索和操作区域 -->
     <el-card class="mb-4">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <el-button type="primary" @click="handleAdd">新增课程</el-button>
         
         <div style="display: flex; gap: 12px;">
-          <el-input v-model="searchForm.courseName" placeholder="课程名称" clearable style="width: 200px;" />
-          <el-input v-model="searchForm.courseCode" placeholder="课程编号" clearable style="width: 200px;" />
-          <el-select v-model="searchForm.collegeId" placeholder="选择学院" clearable style="width: 200px;">
+          <el-input v-model="searchForm.name" placeholder="课程名称或课程编号" clearable style="width: 250px;" />
+
+          <el-select v-model="searchForm.collegeId" placeholder="选择学院" clearable style="width: 300px;">
             <el-option v-for="college in colleges" :key="college.id" :label="college.collegeName" :value="college.id" />
           </el-select>
           <el-button type="primary" @click="fetchCourseList">搜索</el-button>
@@ -111,8 +111,7 @@ const tableHeader = { height: '50px', lineHeight: '50px', fontSize: '16px' }
 
 // 搜索表单
 const searchForm = reactive({
-  courseName: '',
-  courseCode: '',
+  name : '',
   collegeId: null
 })
 
@@ -177,7 +176,7 @@ const fetchColleges = async () => {
 const fetchTeachers = async () => {
   try {
     const res = await get(api.getTeacherList)
-    // 有点神奇,不知道为啥这里res,里面还包装了一个res对象{code:,msg:,data:{code:,msg:,data:{}}}
+    // 有点神奇,不知道为啥这里res,里面还包装了一个res对象{code:,msg:,data:{code:,msg:,data:{数组}}}
     console.log(res)
 
     if (res.code === 200) {
@@ -217,8 +216,7 @@ const fetchCourseList = async () => {
 // 重置搜索
 const resetSearch = () => {
   Object.assign(searchForm, {
-    courseName: '',
-    courseCode: '',
+    name: '',
     collegeId: null
   })
   pagination.current = 1

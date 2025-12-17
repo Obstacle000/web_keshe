@@ -16,13 +16,15 @@
 
     <!-- 筛选 & 搜索 -->
     <div style="margin-bottom:12px; display:flex; gap:12px;">
-      <el-select v-model="collegeId" placeholder="选择学院" @change="fetchCourseList">
+      <el-select v-model="collegeId" placeholder="选择学院" clearable @change="fetchCourseList">
         <el-option v-for="c in colleges" :key="c.id" :label="c.collegeName" :value="c.id"/>
       </el-select>
 
       <el-input v-model="searchQuery" placeholder="课程名或编号" clearable @keyup.enter="fetchCourseList">
         <template #append>
-          <el-button icon="el-icon-search" @click="fetchCourseList"/>
+          <el-button type="primary" icon="el-icon-search" @click="fetchCourseList">
+            搜索
+          </el-button>
         </template>
       </el-input>
     </div>

@@ -189,7 +189,7 @@ const getAgeDate = (params) => {
 const initCollegeList = (init) => {
   get(api.getAllCollege)
       .then(res => {
-        // 先判断 res 是否存在，防止报错
+
         if (res && res.data && res.data.length) {
           collegeList.value = res.data
 

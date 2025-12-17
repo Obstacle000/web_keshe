@@ -5,15 +5,32 @@ const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 
 module.exports = defineConfig({
   transpileDependencies: true,
+
+  // 打包目录
   outputDir: './build',
-  // 和webpapck属性完全一致，最后会进行合并
+
+  // ✅ 正确的开发服务器配置（不是 server，是 devServer）
+  devServer: {
+    port: 3000,
+    open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:22223',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
+  },
+
+  // webpack 原生配置
   configureWebpack: {
     resolve: {
       alias: {
         components: '@/components'
       }
     },
-    //配置webpack自动按需引入element-plus，
     plugins: [
       AutoImport({
         resolvers: [ElementPlusResolver()]

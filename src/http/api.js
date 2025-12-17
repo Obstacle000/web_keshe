@@ -8,6 +8,7 @@ export const api = {
   getStuInfo: '/api/getStuInfo',
   getSpecialtyByCollege: '/api/getSpecialtyByCollege',
   getClassBySpecialty: '/api/getClassBySpecialty',
+  getSpecialtyList: '/api/getSpecialtyList',
   getAllCollege: '/api/getAllCollege',
   addStu: '/api/addStu',
   getStuByNameOrId: '/api/getStuByNameOrId',

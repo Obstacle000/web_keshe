@@ -57,6 +57,7 @@ const loginInfo = ref({
   password: ""
 
 });
+let roleName = ref("");
 
 const login = async () => {
   if (!loginInfo.value.userName || !loginInfo.value.password) {
@@ -69,9 +70,25 @@ const login = async () => {
     const res = await post(api.system.login, loginInfo.value);
     if (res.code === 200) {
       // 将角色统一转换成数组
-      const rolesArray = Array.isArray(res.data.user.roles)
-          ? res.data.user.roles
-          : [res.data.user.roles];
+
+      switch (res.data.user.role) {
+        case 1:
+          roleName = 'STUDENT'
+          break
+        case 2:
+          roleName = 'ADMIN'
+          break
+        case 3:
+          roleName = 'TEACHER'
+          break
+        default:
+          roleName = ''
+      }
+
+
+      const rolesArray = Array.isArray(roleName)
+          ? roleName
+          : [roleName];
 
       // 保存 token 与用户信息
       localStorage.setItem(storagekey.token, res.data.token);

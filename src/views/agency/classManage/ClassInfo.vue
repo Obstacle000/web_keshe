@@ -48,11 +48,11 @@ import ClassEditDialog from "@/components/agency/class/ClassEditDialog";
 let tableData = ref([])
 const options = reactive([
   {prop: 'id', label: '序号', width: 100},
-  {prop: 'classId', label: '班号', width: 200},
-  {prop: 'class', label: '班级名称', width: 230},
-  {prop: 'college', label: '学院', width: 230},
-  {prop: 'specialty', label: '专业', width: 230},
-  {prop: 'teacher', label: '班主任', width: 200},
+  {prop: 'classCode', label: '班级编号', width: 200},
+  {prop: 'className', label: '班级名称', width: 230},
+  {prop: 'specialtyName', label: '专业', width: 230},
+  {prop: 'grade', label: '年级', width: 230},
+
   {prop: 'handel', label: '操作', width: 180}
 ])
 // 弹窗的类型，默认为新增班级弹窗
@@ -76,15 +76,21 @@ onMounted(() => {
 
 const getClassInfo = () => {
   const param = {
-    pageNo: currentPage.value,
-    pageSize: pageSize.value
+    speciality: '',
+    name:'',
+    page:{
+      pageNo: currentPage.value,
+      pageSize: pageSize.value
+    }
   }
   post(api.agency.getClass, param).then(res => {
-    const data = res.data
+    const data = res.data.data
+
     if (res.code === 200) {
-      if (data && data.length) {
+      if (data ) {
+
         tableData.value = data
-        total.value = res.total
+        total.value = res.data.total
       }
     }
   })
@@ -161,15 +167,17 @@ const handleCurrentChange = (val) => {
 /** 模糊搜索班级信息 */
 const onSearch = (e) => {
   const param = {
-    q: e,
-    pageNo: 1,
-    pageSize: pageSize.value
+    name: e,
+    page:{
+      pageNo: currentPage.value,
+      pageSize: pageSize.value
+    }
   }
   post(api.agency.getClass, param).then(res => {
-    const data = res.data
+    const data = res.data.data;
     if (res.code === 200) {
       tableData.value = data
-      total.value = res.total
+      total.value = res.data.total
     } else {
       tableData.value = []
       total.value = 0

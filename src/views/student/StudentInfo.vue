@@ -7,10 +7,13 @@
         @onDel="delStu('', selectStuIdList)"
         @onSearch="searchStu"/>
 
+<!--     el-table 内部对 tableData 做“行循环”，对 options 做“列循环”，两层循环一交叉，就天然匹配出了“行 × 列”，scope 就是这个交叉点。
+-->
     <el-table height="488" :data="tableData" style="width: 100%;margin-bottom: 12px" :header-cell-style="tableHeader" @select="selectStu"
               @select-all="selectAllStu">
 <!--      第一列是复选框-->
       <el-table-column type="selection" width="55" style="padding-left: -10px"></el-table-column>
+
 <!--这儿开始渲染数据-->
       <template v-for="(item, index) in options" :key="index">
 <!-- fixed="right" 的意思：这一列固定在表格最右边的位置，无论你水平滚动表格内容，它都会一直显示在右边-->
@@ -19,6 +22,7 @@
 <!--表头文字的显示,如果是操作列，文字居中；其他列默认靠左-->
             <div :style="{'text-align':item.prop==='handel'?'center':''}">{{ item.label }}</div>
           </template>
+<!--          scope 是 当前行的上下文对象。-->
           <template #default="scope">
             <div v-if="item.prop !== 'handel'">
 <!--如果这一列是 sex（性别列），调用 getSex 函数，把 1/0 转成 男/女 显示。              -->
@@ -101,6 +105,7 @@ const currentPage = ref(1)
 const pageSize = ref(10)
 
 // 现在表格字段匹配不到,可以改一下后端响应数据不要用id,而是用名称,用一下tableField(exit=false) String specialty;...
+// 这是 列配置数组，定义表格要显示哪些列、列名是什么、列的 prop 对应 tableData 中的字段。
 const options = reactive([
   {prop: 'id', label: '序号'},
   {prop: 'stuId', label: '学号'},
