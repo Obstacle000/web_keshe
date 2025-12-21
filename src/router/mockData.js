@@ -2,7 +2,7 @@ export const menu = [
   {
     path: '/student',
     name: 'Student',
-    meta: {title: '学生管理', icon: 'iconfont icon-student',roles: ['ADMIN', 'TEACHER']},
+    meta: {title: '学生管理', icon: 'iconfont icon-student',roles: ['ADMIN', 'TEACHER','STUDENT']},
     component: 'Layout',
     children: [
       {
@@ -12,10 +12,16 @@ export const menu = [
         component: '/student/StudentInfo'
       },
       {
-        path: '/student2',
-        name: 'Student2',
-        meta: {title: '学生2',roles: ['ADMIN', 'TEACHER']},
-        component: '/student/Student2'
+        path: '/scoreManage',
+        name: 'ScoreManage',
+        meta: { title: '学生打分管理', roles: ['TEACHER'] },  // 只有教师能访问
+        component: '/student/ScoreManage'
+      },
+      {
+        path: '/lookupScore',
+        name: 'lookupScore',
+        meta: { title: '学生成绩查阅', roles: ['STUDENT'] },  // 只有教师能访问
+        component: '/student/lookupScore'
       }
     ]
   },
@@ -30,13 +36,8 @@ export const menu = [
         name: 'TeacherInfo',
         meta: {title: '教师信息管理' ,roles: ['ADMIN']},
         component: '/teacher/TeacherInfo'
-      },
-      {
-        path: '/teacher1',
-        name: 'Teacher1',
-        meta: {title: '教师',roles: ['ADMIN']},
-        component: '/teacher/teacher1'
       }
+
     ]
   },
   {
@@ -76,7 +77,7 @@ export const menu = [
   {
     path: '/agency',
     name: 'Agency',
-    meta: {title: '机构', icon: 'iconfont icon-admin'},
+    meta: {title: '机构', icon: 'iconfont icon-admin',roles: ['ADMIN']},
     component: 'Layout',
     children: [
       {
@@ -84,6 +85,20 @@ export const menu = [
         name: 'ClassManagement',
         meta: {title: '班级管理'},
         component: '/agency/classManage/ClassInfo'
+      }
+    ]
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    meta: {title: '仪表盘', icon: 'iconfont icon-student', roles: ['ADMIN', 'TEACHER']},
+    component: 'Layout',
+    children: [
+      {
+        path: '/educationStats',
+        name: 'EducationStats',
+        meta: {title: '教育统计', roles: ['ADMIN', 'TEACHER']},
+        component: '/EducationStats'
       }
     ]
   }

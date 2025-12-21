@@ -1,31 +1,31 @@
-<!--顶部功能栏-->
 <template>
   <div class="top-tabs-bar">
+    <!-- 左侧 -->
     <div class="top-tabs-bar-left">
-      <!--左侧菜单栏展开收起按钮-->
       <div class="open-btn-list" @click="changeSideBar">
-        <i v-show="closeSideBar" class="iconfont icon-close-sidebar icons-size"></i> <!--收起-->
-        <i v-show="!closeSideBar" class="iconfont icon-open-sidebar icons-size"></i><!--展开-->
+        <i v-show="closeSideBar" class="iconfont icon-close-sidebar icons-size"></i>
+        <i v-show="!closeSideBar" class="iconfont icon-open-sidebar icons-size"></i>
       </div>
 
-      <!--路由-面包屑导航,这个就是类似于 根目录->一级目录->二级目录 这样,让你知道你在哪一级-->
-      <el-breadcrumb style="padding-left: 12px" :separator-icon="ArrowRight"><!--指定跟个符号为右箭头-->
+      <el-breadcrumb style="padding-left: 12px" :separator-icon="ArrowRight">
         <el-breadcrumb-item v-for="item in routeList" :key="item.path">
           {{ item.meta.title }}
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
 
-    <!--修改信息下拉框-->
+    <!-- 右侧 -->
     <div class="top-tabs-bar-right">
-      <el-dropdown @command="handleCommand"> <!--当下拉菜单的某一项被点击时，会触发 handleCommand 方法-->
-        <div>
-          <span class="top-tabs-bar-right-user">{{ username }}</span><!--显示当前登录用户的用户名-->
-          <i class="iconfont icon-down"></i> <!--显示一个向下箭头图标,表示可以下拉-->
+      <el-dropdown @command="handleCommand">
+        <div class="user-info">
+          <img :src="userAvatar" alt="avatar" class="user-avatar" />
+          <span class="top-tabs-bar-right-user">{{ username }}</span>
+          <i class="iconfont icon-down"></i>
         </div>
 
         <template #dropdown>
           <el-dropdown-menu>
+            <el-dropdown-item command="uploadAvatar" divided>上传头像</el-dropdown-item>
             <el-dropdown-item command="changePassword" divided>修改密码</el-dropdown-item>
             <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
             <el-dropdown-item command="changeTheme">
@@ -37,8 +37,8 @@
       </el-dropdown>
     </div>
 
-    <!--修改密码弹窗-->
-    <el-dialog v-model="dialogVisible" @close="closelDialog" title="修改密码" width="400">
+    <!-- 修改密码弹窗 -->
+    <el-dialog v-model="dialogVisible" @close="closeDialog" title="修改密码" width="400">
       <el-form
           ref="pwdStuFormRef"
           :model="changePwdForm"
@@ -57,106 +57,82 @@
       </el-form>
 
       <template #footer>
-          <span>
-            <el-button @click="dialogVisible=false">取消</el-button>
-            <el-button type="primary" @click="confirmPassword">确认</el-button>
-          </span>
+        <span>
+          <el-button @click="dialogVisible=false">取消</el-button>
+          <el-button type="primary" @click="confirmPassword">确认</el-button>
+        </span>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import {reactive, ref, watchEffect} from "vue";
-import {useStore} from "vuex";
-import {ArrowRight} from '@element-plus/icons-vue'
-import {useRoute, useRouter} from "vue-router";
-import {storagekey} from "@/utils/constants";
-import {useDark, useToggle} from '@vueuse/core'
-import {get, post} from "@/http/http";
-import {api} from "@/http/api";
+import { reactive, ref, watchEffect } from "vue";
+import { useStore } from "vuex";
+import { ArrowRight } from '@element-plus/icons-vue';
+import { useRoute, useRouter } from "vue-router";
+import { storagekey } from "@/utils/constants";
+import { useDark, useToggle } from '@vueuse/core';
+import { get, post } from "@/http/http";
+import { api } from "@/http/api";
+import { ElMessage, ElMessageBox } from "element-plus";
 
-const store = useStore()
-const route = useRoute()
-const router = useRouter()
-let closeSideBar = ref(true) // 左侧菜单栏展开收起标识
-let dialogVisible = ref(false) // 修改密码弹出框
-let pwdStuFormRef = ref(null) // 修改密码弹窗的实例
-const username = ref(localStorage.getItem(storagekey.username)) // 用户名称
-const isDark = useDark()
-// const toggleDark = useToggle(isDark)
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
+
+let closeSideBar = ref(true);
+let dialogVisible = ref(false);
+let pwdStuFormRef = ref(null);
+
+const username = ref(localStorage.getItem(storagekey.username));
+const isDark = useDark();
+
+const userAvatar = ref(''); // 用户头像
 
 if (!username.value) {
-  router.push({path: '/'})
+  router.push({ path: '/' });
 }
 
+// 修改密码表单
 let changePwdForm = reactive({
   oldPassword: '',
   newPassword: '',
   confirmNewPassword: ''
-})
+});
 
 const pwdFormRules = ref({
-  oldPassword: [{required: true, message: '请输入旧密码', trigger: 'blur'}],/*当输入框失去焦点时触发验证(是否空)*/
-  newPassword: [{required: true, message: '请输入新密码', trigger: 'blur'}],
-  confirmNewPassword: [{required: true, message: '请确认新密码', trigger: 'blur'}]
-})
+  oldPassword: [{ required: true, message: '请输入旧密码', trigger: 'blur' }],
+  newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+  confirmNewPassword: [{ required: true, message: '请确认新密码', trigger: 'blur' }]
+});
 
-// 路由列表，面包屑导航栏---start,route.matched就是获取从根路由到当前访问路由的完整层级路径
-const getBreadcrumb = () => {
-  return route.matched.filter(
-      (item) => item.name && item.meta.title
-  )
-}
+// 路由面包屑
+const getBreadcrumb = () => route.matched.filter(item => item.name && item.meta.title);
+const routeList = ref(getBreadcrumb());
+watchEffect(() => { routeList.value = getBreadcrumb(); });
 
-const routeList = ref(getBreadcrumb())
-
-watchEffect(() => {
-  routeList.value = getBreadcrumb()
-})
-// 路由列表，面包屑导航栏---end
-
-/**
- * 展开收起左侧菜单栏
- */
+// 左侧菜单栏展开收起
 const changeSideBar = () => {
-  store.commit('setCollapse', closeSideBar.value)
-  closeSideBar.value = !closeSideBar.value
-}
-/**
- * 下拉面板操作
- * @param command
- */
+  store.commit('setCollapse', closeSideBar.value);
+  closeSideBar.value = !closeSideBar.value;
+};
+
+// 下拉菜单操作
 const handleCommand = (command) => {
   switch (command) {
-    case 'changePassword':
-      changePassword()
-      break
-    case 'logout':
-      logout()
-      break
-    case 'changeTheme':
-      changeTheme()
-      break
+    case 'changePassword': changePassword(); break;
+    case 'logout': logout(); break;
+    case 'changeTheme': useToggle(isDark); break;
+    case 'uploadAvatar': uploadAvatar(); break;
   }
-}
-const changeTheme = () => {
-  useToggle(isDark)
-}
-const closelDialog = () => {
-}
-/**
- * 修改密码
- */
-const changePassword = () => {
-  dialogVisible.value = true
-}
+};
 
-/**
- * 弹窗点击确定
- */
+// 修改密码
+const changePassword = () => { dialogVisible.value = true; };
+const closeDialog = () => {};
 const confirmPassword = () => {
-  pwdStuFormRef.value.validate((valid) => {
+  pwdStuFormRef.value.validate(valid => {
     if (!valid) return;
 
     if (changePwdForm.newPassword !== changePwdForm.confirmNewPassword) {
@@ -164,36 +140,25 @@ const confirmPassword = () => {
       return;
     }
 
-    const params = {
-      oldPassword: changePwdForm.oldPassword,
-      newPassword: changePwdForm.newPassword
-    };
-
+    const params = { oldPassword: changePwdForm.oldPassword, newPassword: changePwdForm.newPassword };
     post(api.updatePas, params)
         .then(res => {
           if (res.code === 200) {
             ElMessage.success('密码修改成功，请重新登录');
             dialogVisible.value = false;
-            // 清空表单
             changePwdForm.oldPassword = '';
             changePwdForm.newPassword = '';
             changePwdForm.confirmNewPassword = '';
-            // 退出登录
             logout();
           } else {
             ElMessage.error(res.message || '修改失败');
           }
         })
-        .catch(err => {
-          console.error(err);
-          ElMessage.error('请求失败');
-        });
+        .catch(() => { ElMessage.error('请求失败'); });
   });
 };
 
-/**
- * 退出登录
- */
+// 退出登录
 const logout = () => {
   ElMessageBox.confirm('确定要退出吗', '提示', {
     confirmButtonText: '确定',
@@ -201,29 +166,53 @@ const logout = () => {
     closeOnClickModal: false,
     type: 'warning',
   }).then(() => {
-    router.push({path: '/'})
-    // 导航栏置为首页
-    /*用户在登录后可能打开了多个标签页（比如首页、学生管理、课程管理…）,退出登录后，这些标签页需要 清空或重置为默认首页*/
-    store.commit('setNavTabs', [{path: "/index", meta: {title: '首页'}}])
-  }).catch(() => {
+    router.push({ path: '/' });
+    store.commit('setNavTabs', [{ path: "/index", meta: { title: '首页' } }]);
+  }).catch(() => {});
+};
 
-  })
-}
-</script>
+// 上传头像
+const uploadAvatar = () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-<script>
-export default {
-  name: "TabsBar"
-}
+    const formData = new FormData();
+    formData.append('file', file);
+
+    post(api.uploadPicture, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+        .then(res => {
+          if (res.code === 200) {
+            ElMessage.success('上传成功');
+            getAvatar();
+          } else {
+            ElMessage.error(res.message || '上传失败');
+          }
+        }).catch(() => { ElMessage.error('上传失败'); });
+  };
+  input.click();
+};
+
+// 获取头像
+const getAvatar = () => {
+  post(api.getAvatar).then(res => {
+    if (res.code === 200) userAvatar.value = res.data || '';
+  });
+};
+
+// 初始化获取头像
+getAvatar();
 </script>
 
 <style lang="scss" scoped>
 $width: 24px;
+
 .top-tabs-bar {
   height: 55px;
-  //line-height: 60px;
   padding: 0 20px;
-  //background: #ffffff;
   background-color: var(--el-bg-color-overlay);
   border-bottom: 1px #eeeeee solid;
   display: flex;
@@ -234,14 +223,9 @@ $width: 24px;
     display: flex;
     align-items: center;
 
-    .open-btn-list {
-      width: $width;
-    }
+    .open-btn-list { width: $width; }
 
-    .icons-size {
-      cursor: pointer;
-      font-size: $width;
-    }
+    .icons-size { cursor: pointer; font-size: $width; }
   }
 
   .top-tabs-bar-right {
@@ -249,9 +233,17 @@ $width: 24px;
     align-items: center;
     cursor: pointer;
 
-    .top-tabs-bar-right-user {
-      margin-right: 6px;
-    }
+    .user-info { display: flex; align-items: center; }
+
+    .top-tabs-bar-right-user { margin-right: 6px; }
   }
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 6px;
+  object-fit: cover;
 }
 </style>

@@ -6,10 +6,9 @@ const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 module.exports = defineConfig({
   transpileDependencies: true,
 
-  // 打包目录
-  outputDir: './build',
+  // 打包目录 - 修改这里！
+      outputDir: 'C:\\Users\\Chen\\Downloads\\StudentManageSystem-main\\StudentManageSystem-main\\webkeshe\\src\\main\\resources\\public',
 
-  // ✅ 正确的开发服务器配置（不是 server，是 devServer）
   devServer: {
     port: 3000,
     open: true,

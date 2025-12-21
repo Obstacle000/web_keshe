@@ -41,7 +41,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+
 import { ElMessage } from "element-plus";
 import { post } from "@/http/http"; // 你封装的请求方法
 import { api } from "@/http/api"; // 这里假设 api.system.login = '/auth/login'
@@ -49,14 +49,20 @@ import { storagekey } from "@/utils/constants";
 import { menu } from '@/router/mockData'
 import { filterAsyncRouter } from '@/router/permission'
 
-const router = useRouter();
-const loading = ref(false);
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute()
+const router = useRouter()
 
 const loginInfo = ref({
-  userName: "",
-  password: ""
+  userName: route.query.userName || 'chen',
+  password: route.query.password || '123456'
+})
 
-});
+
+
+const loading = ref(false);
+
 let roleName = ref("");
 
 const login = async () => {

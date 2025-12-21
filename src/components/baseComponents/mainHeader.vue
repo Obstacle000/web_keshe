@@ -11,7 +11,7 @@
           @click="onDel">
         删除
       </el-button>
-      <el-input v-model="searchValue" @keyup.enter="search" clearable placeholder="课程名称或课程编号"></el-input>
+      <el-input v-model="searchValue" @keyup.enter="search" clearable placeholder="名称或编号"></el-input>
       <el-button type="primary" @click="search">搜索</el-button>
     </div>
   </div>

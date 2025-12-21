@@ -6,6 +6,11 @@
 
 export const api = {
   getStuInfo: '/api/getStuInfo',
+  listScore: '/api/teacher/listScore',
+  listScoreStu: '/api/student/listScore',
+  giveScore: '/api/giveScore',
+  uploadPicture: '/api/uploadPicture',
+  getAvatar: '/api/getAvatar',
   getSpecialtyByCollege: '/api/getSpecialtyByCollege',
   getClassBySpecialty: '/api/getClassBySpecialty',
   getSpecialtyList: '/api/getSpecialtyList',
